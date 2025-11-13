@@ -1,1 +1,21 @@
 node_modules/
+.DS_Store
+.dev.vars
+dist/
+build/
+*.log
+.wrangler/
+.env.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Test artifacts
+tests/assets/temp/
+coverage/
+
+# Development only
+scripts/dev/output/

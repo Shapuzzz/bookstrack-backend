@@ -5,19 +5,48 @@
 **Production URL:** https://api.oooefam.net
 **Harvest Dashboard:** https://harvest.oooefam.net
 
-## Architecture
+## Repository Structure
+
+```
+.
+├── README.md                  # This file
+├── wrangler.toml             # Cloudflare Workers config
+├── package.json              # Dependencies
+├── src/                      # Production code
+│   ├── index.js              # Main router
+│   ├── handlers/             # Request handlers
+│   ├── services/             # Business logic
+│   ├── providers/            # AI integrations (Gemini, Google Books, etc.)
+│   ├── durable-objects/      # WebSocket Durable Object
+│   ├── middleware/           # CORS, rate limiting, validation
+│   ├── types/                # TypeScript type definitions
+│   └── utils/                # Shared utilities
+├── tests/                    # All tests and fixtures
+│   ├── unit/                 # Unit tests
+│   ├── integration/          # Integration tests
+│   ├── handlers/             # Handler-specific tests
+│   ├── normalizers/          # Data normalization tests
+│   ├── utils/                # Utility function tests
+│   └── assets/               # Test images and fixtures
+├── docs/                     # Documentation
+│   ├── deployment/           # Deployment guides (DEPLOYMENT.md, SECRETS_SETUP.md)
+│   ├── guides/               # Feature guides (Metrics, Verification, etc.)
+│   ├── plans/                # Implementation plans and architecture docs
+│   ├── workflows/            # Workflow diagrams and processes
+│   ├── robit/                # AI automation setup docs
+│   ├── archives/             # Historical documentation
+│   ├── API_README.md         # **START HERE** - API contracts and integration guide
+│   └── FRONTEND_HANDOFF.md   # Frontend integration guide (iOS, Flutter)
+├── scripts/                  # Utility and development scripts
+│   ├── dev/                  # Development scripts (test image generation)
+│   └── utils/                # Production utilities (cache warming, harvesting)
+└── .github/                  # GitHub Actions workflows
+
+```
+
+### Architecture Details
 
 Single monolith worker with direct function calls (no RPC service bindings):
-
-```
-src/
-├── index.js                   # Main router
-├── durable-objects/           # WebSocket DO
-├── services/                  # Business logic
-├── handlers/                  # Request handlers
-├── providers/                 # AI provider modules
-└── utils/                     # Shared utilities
-```
 
 ### Features
 
@@ -162,11 +191,26 @@ npx wrangler tail --format pretty
 
 ## Documentation
 
-- **API Reference:** `docs/API_README.md` - **START HERE** for canonical contracts, endpoints, and integration patterns
-- **Architecture:** `MONOLITH_ARCHITECTURE.md` - Backend architecture overview
-- **Cover Harvest:** `docs/COVER_HARVEST_SYSTEM.md` - ISBNdb cover caching system (5000 req/day)
-- **Deployment:** `DEPLOYMENT.md` - Complete deployment guide with rollback procedures
-- **Secrets Setup:** `SECRETS_SETUP.md` - Step-by-step guide for configuring 5 GitHub secrets
+### Quick Links (Start Here)
+- **[API Reference](docs/API_README.md)** - Canonical contracts, endpoints, and integration patterns
+- **[Frontend Integration Guide](docs/FRONTEND_HANDOFF.md)** - iOS and Flutter integration guidance
+
+### Deployment & Operations
+- **[Deployment Guide](docs/deployment/DEPLOYMENT.md)** - Complete deployment guide with rollback procedures
+- **[Secrets Setup](docs/deployment/SECRETS_SETUP.md)** - Step-by-step guide for configuring GitHub secrets
+
+### Feature Guides
+- **[Cover Harvest System](docs/guides/ISBNDB-HARVEST-IMPLEMENTATION.md)** - ISBNdb cover caching (5000 req/day)
+- **[Metrics & Monitoring](docs/guides/METRICS.md)** - Performance targets and monitoring
+- **[Verification Guide](docs/guides/VERIFICATION.md)** - Testing and validation procedures
+
+### Implementation Plans
+- **[Canonical API Contracts](docs/plans/2025-11-11-canonical-api-contract-implementation.md)** - TypeScript/Swift data contracts
+- **[Architecture Workflow](docs/workflows/canonical-contracts-workflow.md)** - Visual process diagrams
+
+### Reference
+- **[Architecture Overview](MONOLITH_ARCHITECTURE.md)** - Backend architecture and design principles
+- **[Historical Docs](docs/archives/)** - Archived deployment notes and completed initiatives
 
 ## License
 
