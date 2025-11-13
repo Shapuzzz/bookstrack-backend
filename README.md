@@ -162,9 +162,11 @@ npx wrangler tail --format pretty
 
 ## Documentation
 
-- **Architecture:** `MONOLITH_ARCHITECTURE.md`
-- **Cover Harvest:** `docs/COVER_HARVEST_SYSTEM.md`
-- **API Docs:** `docs/api/`
+- **API Reference:** `docs/API_README.md` - **START HERE** for canonical contracts, endpoints, and integration patterns
+- **Architecture:** `MONOLITH_ARCHITECTURE.md` - Backend architecture overview
+- **Cover Harvest:** `docs/COVER_HARVEST_SYSTEM.md` - ISBNdb cover caching system (5000 req/day)
+- **Deployment:** `DEPLOYMENT.md` - Complete deployment guide with rollback procedures
+- **Secrets Setup:** `SECRETS_SETUP.md` - Step-by-step guide for configuring 5 GitHub secrets
 
 ## License
 
