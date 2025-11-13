@@ -10,9 +10,13 @@
     "tail": "wrangler tail",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest --coverage",
     "update-wrangler": "npm install wrangler@latest"
   },
   "devDependencies": {
+    "@vitest/coverage-v8": "^4.0.8",
+    "@vitest/ui": "^4.0.8",
     "typescript": "^5.9.3",
     "vitest": "^4.0.8",
     "wrangler": "^4.48.0"
