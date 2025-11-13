@@ -384,20 +384,115 @@ throw new Error('External API call failed')
 
 ## AI Collaboration
 
-### When to Use AI Tools
-- **Claude Code (you!):** Multi-file refactoring, architecture changes
-- **Jules (@jules on GitHub):** PR reviews, code explanations
-- **Zen MCP:** Security audits, performance analysis, complex debugging
+### Autonomous Project Agents
+
+#### 🚀 cf-ops-monitor (Deployment & Observability)
+**Location:** `.claude/skills/cf-ops-monitor/`
+**Invoke with:** `/skill cf-ops-monitor` or automatically via hooks
+
+**Capabilities:**
+- Execute `wrangler deploy` with health checks
+- Stream and analyze logs with `wrangler tail`
+- Monitor error rates and auto-rollback on failures
+- Track KV cache hit rates and Durable Object metrics
+- Cost optimization (billable operations tracking)
+- Performance profiling (cold starts, latency)
+
+**Use when:**
+- Deploying to production
+- Investigating 5xx errors or slow responses
+- Analyzing WebSocket disconnections
+- Monitoring cache performance
+- Tracking API quota usage (Google Books, ISBNdb, Gemini)
+
+**Autonomy:** High - can deploy, monitor, and rollback without human intervention
+
+---
+
+#### ✅ cf-code-reviewer (Code Quality & Best Practices)
+**Location:** `.claude/skills/cf-code-reviewer/`
+**Invoke with:** `/skill cf-code-reviewer` or automatically on code changes
+
+**Capabilities:**
+- Review Workers-specific patterns (env bindings, KV cache, Durable Objects)
+- Detect anti-patterns (blocking event loop, missing timeouts)
+- Enforce security (input validation, secrets management, CORS)
+- Validate canonical response format compliance
+- Check service layer separation
+- Performance analysis (async patterns, memory efficiency)
+
+**Use when:**
+- Before creating PRs
+- After refactoring handlers or services
+- Adding new API endpoints
+- Modifying `wrangler.toml`
+- Reviewing external API integrations
+
+**Autonomy:** Medium - provides detailed reviews and recommendations
+
+---
+
+### AI Tool Hierarchy
+
+#### Level 1: Inline Assistance
 - **GitHub Copilot:** Inline code completion, boilerplate generation
 
-### Handoff Patterns
+#### Level 2: Project Agents (Autonomous)
+- **cf-ops-monitor:** Deployment, monitoring, rollback
+- **cf-code-reviewer:** Code quality, Workers best practices
+
+#### Level 3: Orchestration & Architecture
+- **Claude Code (you!):** Multi-file refactoring, architecture changes
+- **Jules (@jules on GitHub):** PR reviews, code explanations
+
+#### Level 4: Deep Analysis
+- **Zen MCP Tools:**
+  - `debug` - Complex bug investigation
+  - `secaudit` - Security vulnerability assessment
+  - `codereview` - Architectural code review
+  - `thinkdeep` - Multi-stage reasoning for complex problems
+  - `precommit` - Pre-commit validation across repositories
+
+---
+
+### Agent Handoff Patterns
+
+**Code Change Workflow:**
 1. **Copilot** generates initial code
-2. **Claude Code** refactors to match these guidelines
-3. **Zen MCP** validates architecture and security
-4. **Jules** reviews PR before human approval
+2. **cf-code-reviewer** validates Workers patterns and security
+3. **Claude Code** refactors to match project architecture
+4. **cf-ops-monitor** deploys and monitors health
+5. **Zen MCP** performs deep security audit (if sensitive changes)
+6. **Jules** reviews PR before human approval
+
+**Incident Response Workflow:**
+1. **cf-ops-monitor** detects error spike via `wrangler tail`
+2. **cf-ops-monitor** auto-rollback if error rate > 5%
+3. **Claude Code** investigates root cause with Zen MCP `debug`
+4. **cf-code-reviewer** validates fix before re-deploy
+5. **cf-ops-monitor** deploys fix and monitors recovery
+
+**New Feature Workflow:**
+1. **Claude Code** implements feature across multiple files
+2. **cf-code-reviewer** validates code quality and patterns
+3. **Zen MCP** `codereview` for architecture alignment
+4. **cf-ops-monitor** deploys to production with monitoring
+5. **Jules** documents feature in PR review
+
+---
+
+### Hook-Based Agent Triggers
+
+**Automatic Invocation:**
+- Code changes in `src/handlers/` or `src/services/` → `cf-code-reviewer`
+- `wrangler deploy` execution → `cf-ops-monitor`
+- `wrangler.toml` modifications → Both agents
+- `wrangler tail` streaming → `cf-ops-monitor`
+
+**Hook Location:** `.claude/hooks/post-tool-use.sh`
 
 ---
 
 **Last Updated:** November 13, 2025
-**Maintained By:** AI Team (Claude Code, Jules, Zen MCP)
+**Maintained By:** AI Team (Claude Code, cf-ops-monitor, cf-code-reviewer, Jules, Zen MCP)
 **Human Owner:** @jukasdrj
