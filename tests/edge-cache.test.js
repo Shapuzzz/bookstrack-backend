@@ -27,10 +27,13 @@ describe('EdgeCacheService', () => {
     const testData = { title: 'Test Book', items: [1, 2, 3] };
     const ttl = 3600; // 1 hour
 
-    // Mock cache.match to return cached data
+    // Mock cache.match to return cached data with Age header
     mockCache.match = vi.fn(async () => {
       return new Response(JSON.stringify(testData), {
-        headers: { 'Content-Type': 'application/json' }
+        headers: {
+          'Content-Type': 'application/json',
+          'Age': '10' // 10 seconds old - fresh within 3600s TTL
+        }
       });
     });
 
@@ -39,7 +42,7 @@ describe('EdgeCacheService', () => {
     const result = await service.get(cacheKey);
     expect(result).not.toBeNull();
     expect(result.data).toEqual(testData);
-    expect(result.source).toBe('EDGE');
+    expect(result.source).toBe('EDGE_FRESH'); // Updated to match implementation
     expect(result.latency).toMatch(/<\d+ms/);
   });
 });

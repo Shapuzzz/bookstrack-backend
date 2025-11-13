@@ -46,7 +46,10 @@ describe('UnifiedCacheService', () => {
 
     expect(result.data).toEqual(mockData);
     expect(result.source).toBe('EDGE');
-    expect(service.edgeCache.get).toHaveBeenCalledWith(cacheKey);
+    expect(service.edgeCache.get).toHaveBeenCalledWith(cacheKey, {
+      maxAge: 3600,
+      staleWhileRevalidate: 86400
+    });
   });
 
   test('get falls back to KV on edge miss', async () => {
@@ -66,7 +69,10 @@ describe('UnifiedCacheService', () => {
 
     expect(result.data).toEqual(mockData);
     expect(result.source).toBe('KV');
-    expect(service.edgeCache.get).toHaveBeenCalledWith(cacheKey);
+    expect(service.edgeCache.get).toHaveBeenCalledWith(cacheKey, {
+      maxAge: 3600,
+      staleWhileRevalidate: 86400
+    });
     expect(service.kvCache.get).toHaveBeenCalledWith(cacheKey, 'title');
   });
 
@@ -96,5 +102,18 @@ describe('UnifiedCacheService', () => {
       mockData,
       6 * 60 * 60 // 6h TTL for edge
     );
+  });
+
+  test('get calls edgeCache.get with correct options', async () => {
+    const cacheKey = 'search:title:q=test';
+    service.edgeCache.get = vi.fn(async () => null);
+    service.kvCache.get = vi.fn(async () => null);
+
+    await service.get(cacheKey, 'title');
+
+    expect(service.edgeCache.get).toHaveBeenCalledWith(cacheKey, {
+      maxAge: 3600,
+      staleWhileRevalidate: 86400
+    });
   });
 });

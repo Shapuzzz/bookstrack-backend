@@ -17,9 +17,9 @@ describe('KVCacheService', () => {
   });
 
   test('initializes with extended TTLs', () => {
-    expect(service.ttls.title).toBe(24 * 60 * 60); // 24h
-    expect(service.ttls.isbn).toBe(30 * 24 * 60 * 60); // 30d
-    expect(service.ttls.author).toBe(7 * 24 * 60 * 60); // 7d
+    expect(service.ttls.title).toBe(7 * 24 * 60 * 60); // 7 days
+    expect(service.ttls.isbn).toBe(365 * 24 * 60 * 60); // 365 days
+    expect(service.ttls.author).toBe(7 * 24 * 60 * 60); // 7 days
   });
 
   test('get returns null on cache miss', async () => {
@@ -94,7 +94,7 @@ describe('KVCacheService', () => {
 
     await service.set(cacheKey, highQualityData, 'title');
 
-    // Base TTL for title is 24h (86400s), high quality doubles it
-    expect(capturedTTL).toBe(86400 * 2); // 48 hours
+    // Base TTL for title is 7d (604800s), high quality doubles it to 14d
+    expect(capturedTTL).toBe(7 * 24 * 60 * 60 * 2); // 14 days
   });
 });
