@@ -6,20 +6,21 @@
  */
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { handleBatchEnrichment } from '../../src/handlers/batch-enrichment.js';
+import { handleBatchEnrichment } from '../../src/handlers/batch-enrichment.ts';
 
 // Mock environment and context
 const createMockEnv = () => ({
   PROGRESS_WEBSOCKET_DO: {
     idFromName: vi.fn((name) => `mock-id-${name}`),
     get: vi.fn(() => ({
-      setAuthToken: vi.fn(), // This was missing
-      updateProgress: vi.fn(),
-      updateProgressV2: vi.fn(),
-      complete: vi.fn(),
-      completeV2: vi.fn(),
-      sendError: vi.fn(),
-      fail: vi.fn()
+      setAuthToken: vi.fn().mockResolvedValue(undefined),
+      initializeJobState: vi.fn().mockResolvedValue(undefined),
+      updateProgress: vi.fn().mockResolvedValue(undefined),
+      updateProgressV2: vi.fn().mockResolvedValue(undefined),
+      complete: vi.fn().mockResolvedValue(undefined),
+      completeV2: vi.fn().mockResolvedValue(undefined),
+      sendError: vi.fn().mockResolvedValue(undefined),
+      fail: vi.fn().mockResolvedValue(undefined)
     }))
   }
 });
