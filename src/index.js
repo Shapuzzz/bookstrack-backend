@@ -258,12 +258,12 @@ export default {
     // Enrichment API Endpoint
     // ========================================================================
 
-    // POST /api/enrichment/start - DEPRECATED: Redirect to /api/enrichment/batch
-    // This endpoint used old workIds format. iOS should migrate to /api/enrichment/batch with books array.
+    // POST /api/enrichment/start - DEPRECATED: Redirect to /v1/enrichment/batch
+    // This endpoint used old workIds format. iOS should migrate to /v1/enrichment/batch with books array.
     // For backward compatibility, we convert workIds to books format (assuming workId = title for now)
     if (url.pathname === "/api/enrichment/start" && request.method === "POST") {
       console.warn(
-        "[DEPRECATED] /api/enrichment/start called. iOS should migrate to /api/enrichment/batch",
+        "[DEPRECATED] /api/enrichment/start called. iOS should migrate to /v1/enrichment/batch",
       );
 
       // Rate limiting: Prevent denial-of-wallet attacks
@@ -299,7 +299,7 @@ export default {
         }
 
         // Convert workIds to books format (workId is treated as title for backward compat)
-        // TODO: iOS should send actual book data via /api/enrichment/batch instead
+        // TODO: iOS should send actual book data via /v1/enrichment/batch instead
         const books = workIds.map((id) => ({ title: String(id) }));
 
         // Redirect to new batch enrichment handler
@@ -472,30 +472,7 @@ export default {
       return handleDLQMonitor(request, env);
     }
 
-    // Batch enrichment endpoint (POST /api/enrichment/batch) - DEPRECATED
-    // Use /v1/enrichment/batch instead (canonical endpoint for iOS migration)
-    if (url.pathname === "/api/enrichment/batch" && request.method === "POST") {
-      // Rate limiting: Prevent denial-of-wallet attacks
-      const rateLimitResponse = await checkRateLimit(request, env);
-      if (rateLimitResponse) return rateLimitResponse;
-
-      // Get the response from the handler
-      const response = await handleBatchEnrichment(request, env, ctx);
-
-      // Add deprecation headers for monitoring and client migration
-      const responseWithHeaders = new Response(response.body, response);
-      responseWithHeaders.headers.set("X-Deprecated", "true");
-      responseWithHeaders.headers.set("X-Deprecation-Date", "2026-01-08");
-      responseWithHeaders.headers.set(
-        "X-Migration-Guide",
-        "Use /v1/enrichment/batch instead",
-      );
-
-      return responseWithHeaders;
-    }
-
     // Canonical batch enrichment endpoint (POST /v1/enrichment/batch) - iOS migration
-    // Same behavior as /api/enrichment/batch but on canonical /v1 path
     // iOS will migrate to this endpoint via feature flag
     if (url.pathname === "/v1/enrichment/batch" && request.method === "POST") {
       // Rate limiting: Prevent denial-of-wallet attacks
